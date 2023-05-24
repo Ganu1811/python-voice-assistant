@@ -1,4 +1,6 @@
 import webbrowser
+import subprocess
+import platform
 import speech_recognition as sr
 import pyttsx3
 
@@ -30,7 +32,20 @@ def listen():
 def speak(response):
     engine.say(response)
     engine.runAndWait()
-
+    
+# for opening file explorer
+def open_file_explorer():
+    try:
+        if platform.system() == "Windows":
+            subprocess.Popen('explorer')
+        elif platform.system() == "Darwin":
+            subprocess.Popen(['open', '-a', 'Finder'])
+        else:
+            speak("I'm sorry, I can only open the file explorer on Windows and macOS.")
+    except Exception as e:
+        print("An error occurred while opening the file explorer:", e)
+        speak("Sorry, I encountered an error while opening the file explorer.")
+        
 # Main program loop
 while True:
     command = listen()
@@ -46,5 +61,8 @@ while True:
         speak("suere! which website do you want to open")
         website = listen()
         webbrowser.open(website)
+    elif "open file explorer" in command:
+        speak("Opening file explorer.")
+        open_file_explorer()
     else:
         speak("I'm sorry, I cannot perform that task.")
